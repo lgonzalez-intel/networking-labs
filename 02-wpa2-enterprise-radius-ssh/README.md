@@ -325,7 +325,13 @@ The serial link uses 20.0.0.0/8, a public range owned by a real organisation, an
 
 ### 3. Mask mismatch on the access point
 
-The WRT300N in Barcelona has 192.168.3.1 with mask **255.255.255.128 (/25)**, but the LAN is a /24. The clients are not affected, because the access point only bridges their traffic. But the access point itself thinks its network ends at 192.168.3.127, so the gateway (192.168.3.254) is outside its subnet. Managing the access point from another site would fail. It should be 255.255.255.0.
+The WRT300N in Barcelona has 192.168.3.1 with mask **255.255.255.128 (/25)**, but the LAN is a /24. The access point therefore thinks its network ends at 192.168.3.127.
+
+- **Wireless clients are not affected:** the access point only bridges their traffic to the router, without looking at the IPs.
+- **RADIUS is not affected:** the server (192.168.3.2) falls inside the /25.
+- **Traffic to the access point itself is affected:** a device in the upper half of the LAN (for example 192.168.3.200) can't manage it, because the access point sees that address as belonging to another network.
+
+The mask should be 255.255.255.0, the same as the rest of the LAN.
 
 ### 4. Only one router is hardened
 
