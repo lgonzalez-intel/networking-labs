@@ -323,21 +323,11 @@ The RADIUS shared secret is `123456789`. Anyone who gets it can impersonate an a
 
 The serial link uses 20.0.0.0/8, a public range owned by a real organisation, and a /8 for a link that only needs 2 addresses. A point-to-point link should use a private /30 or /31, for example `10.0.0.0/30` (Barcelona .1 · Cáceres .2).
 
-### 3. Mask mismatch on the access point
-
-The WRT300N in Barcelona has 192.168.3.1 with mask **255.255.255.128 (/25)**, but the LAN is a /24. The access point therefore thinks its network ends at 192.168.3.127.
-
-- **Wireless clients are not affected:** the access point only bridges their traffic to the router, without looking at the IPs.
-- **RADIUS is not affected:** the server (192.168.3.2) falls inside the /25.
-- **Traffic to the access point itself is affected:** a device in the upper half of the LAN (for example 192.168.3.200) can't manage it, because the access point sees that address as belonging to another network.
-
-The mask should be 255.255.255.0, the same as the rest of the LAN.
-
-### 4. Only one router is hardened
+### 3. Only one router is hardened
 
 Cáceres keeps the default hostname (`Router`) and has no SSH configured. Both routers should have a hostname, SSH only, local users and `enable secret`. Other basic hardening: `service password-encryption`, `exec-timeout` on the VTY lines and a login banner.
 
-### 5. The same server does everything
+### 4. The same server does everything
 
 At each site one server is both RADIUS and DHCP. If it goes down, nobody can join the wireless network, and devices that are already connected lose their address when the lease expires. A real network would use a backup RADIUS server and keep the DHCP service separate, or have a backup for it too.
 
@@ -346,4 +336,5 @@ At each site one server is both RADIUS and DHCP. If it goes down, nobody can joi
 - **WPA2-Enterprise vs WPA2-Personal.** With a RADIUS server each user has their own credentials, and the access point only forwards the login.
 - **The shared secret** protects the conversation between the access point and the RADIUS server. It is not the user's password.
 - **SSH vs Telnet.** Telnet opens the port but the router closes the session when the VTY lines only allow SSH.
+- **Reviewing catches real mistakes.** While documenting the lab I found the Barcelona access point had mask 255.255.255.128 (/25) while the LAN is a /24. Clients still worked, because the access point only bridges their traffic, so the error was invisible. I fixed it to 255.255.255.0.
 - **TTL as a hop counter.** TTL=126 in a ping shows how many routers the packet crossed.
