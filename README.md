@@ -8,6 +8,7 @@ Each project has its own folder with the files needed to reproduce it and a READ
 | # | Project | Tools | Topics |
 |---|---|---|---|
 | 01 | [Multi-site network with DNS and web services](01-multisite-dns-network/) | Cisco Packet Tracer | Static routing · Serial WAN links · DNS · DHCP · Addressing design review |
+| 02 | [Two-site network with WPA2-Enterprise Wi-Fi and SSH](02-wpa2-enterprise-radius-ssh/) | Cisco Packet Tracer | WPA2-Enterprise · RADIUS (AAA) · DHCP server · SSH vs Telnet · Static routing |
 
 ## 🧭 How each project is documented
 
